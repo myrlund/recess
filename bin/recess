@@ -61,10 +61,15 @@ output = paths[1]
 paths  = paths[0]
 
 // generate output and write to file
-writeFile = function () {
+writeFile = function (changedPath) {
   recess(paths, options, function (err, obj) {
     fs.writeFile(output, obj.output)
-    console.log("Change detected in "+paths+": "+output+" was recompiled successfully")
+    if (obj.errors.length > 0) {
+      console.log("ERRORS:")
+      console.log(obj.errors.join("\n"))
+    }
+    else
+      console.log(changedPath+" changed: "+output+" was recompiled successfully")
   })
 }
 
@@ -73,4 +78,6 @@ watch.createMonitor(options.watch, function (monitor) {
   monitor.on("created", writeFile)
   monitor.on("changed", writeFile)
   monitor.on("removed", writeFile)
+  
+  monitor.emit("created")
 })
