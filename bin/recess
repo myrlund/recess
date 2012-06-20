@@ -64,6 +64,7 @@ paths  = paths[0]
 writeFile = function () {
   recess(paths, options, function (err, obj) {
     fs.writeFile(output, obj.output)
+    console.log("Change detected in "+paths+": "+output+" was recompiled successfully")
   })
 }
 
